@@ -1,4 +1,4 @@
-insert into product (description, price, barcode)
+insert into ms.product (description, price, barcode)
 values ('Smartphone Galaxy S23', 4500.00, '1111111111111'),
     ('Smartphone iPhone 14', 6500.00, '222222222222'),
     ('Smartphone Mi 14', 3500.0, '3333333333333'),

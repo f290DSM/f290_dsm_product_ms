@@ -6,17 +6,18 @@ spring:
   h2:
     console.enabled: true
   datasource:
-    url: jdbc:h2:mem:product_db
+    url: jdbc:h2:mem:product_db;INIT=CREATE SCHEMA IF NOT EXISTS ms
     driverClassName: org.h2.Driver
     username: aluno
     password: segredo
   jpa:
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
+      # generate-ddl: false
       ddl-auto: none
     show-sql: true
   flyway:
-    url: jdbc:h2:mem:product_db
-    schemas: product_db
+    url: jdbc:h2:mem:product_db;INIT=CREATE SCHEMA IF NOT EXISTS ms
+    schemas: ms
     user: aluno
     password: segredo
