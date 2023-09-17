@@ -6,7 +6,7 @@ spring:
   h2:
     console.enabled: true
   datasource:
-    url: jdbc:h2:mem:product_db;INIT=CREATE SCHEMA IF NOT EXISTS ms
+    url: jdbc:h2:mem:product_db
     driverClassName: org.h2.Driver
     username: aluno
     password: segredo
@@ -17,7 +17,6 @@ spring:
       ddl-auto: none
     show-sql: true
   flyway:
-    url: jdbc:h2:mem:product_db;INIT=CREATE SCHEMA IF NOT EXISTS ms
-    schemas: ms
+    url: jdbc:h2:mem:product_db
     user: aluno
     password: segredo
