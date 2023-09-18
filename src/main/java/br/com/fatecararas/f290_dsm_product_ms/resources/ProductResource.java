@@ -98,5 +98,10 @@ public class ProductResource {
 
         return ResponseEntity.ok().body(updatedProduct);
     }
+
+    //TODO: Criar um end-point para recuperar um produto por codigo de barras
+    //TODO: Criar um end-point para excluir um produto pelo codigo de barras
+
+    //TODO: Criar uma collection no Postman ou similar para testar as requisições
     
 }
