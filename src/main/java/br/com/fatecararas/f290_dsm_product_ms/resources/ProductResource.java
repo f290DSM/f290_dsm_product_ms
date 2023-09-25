@@ -119,7 +119,6 @@ public class ProductResource {
                 product.getPrice());
 
         Cambio cambio = restTemplate.getForObject(url, Cambio.class);
-
         product.setPrice(cambio.getValue());
 
         return ResponseEntity.ok().body(product);
