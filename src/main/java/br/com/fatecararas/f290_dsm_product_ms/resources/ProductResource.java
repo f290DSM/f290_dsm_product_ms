@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.fatecararas.f290_dsm_product_ms.domain.Cambio;
 import br.com.fatecararas.f290_dsm_product_ms.domain.entities.Product;
 import br.com.fatecararas.f290_dsm_product_ms.repositories.ProductRepository;
 
@@ -31,6 +34,9 @@ import br.com.fatecararas.f290_dsm_product_ms.repositories.ProductRepository;
 public class ProductResource {
 
     private final ProductRepository repository;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public ProductResource(ProductRepository repository) {
         this.repository = repository;
@@ -89,7 +95,8 @@ public class ProductResource {
     public ResponseEntity<?> update(@Valid @RequestBody Product product) {
         Optional<Product> optional = repository.findById(product.getId());
 
-        if(optional.isEmpty()) return ResponseEntity.notFound().build();
+        if (optional.isEmpty())
+            return ResponseEntity.notFound().build();
 
         Product updatedProduct = optional.get();
         updatedProduct.setBarcode(product.getBarcode());
@@ -99,9 +106,29 @@ public class ProductResource {
         return ResponseEntity.ok().body(updatedProduct);
     }
 
-    //TODO: Criar um end-point para recuperar um produto por codigo de barras
-    //TODO: Criar um end-point para excluir um produto pelo codigo de barras
+    @GetMapping("/export/{barcode}")
+    public ResponseEntity<?> findByBarcode(@PathVariable("barcode") String barcode) {
+        Optional<Product> optional = repository.findByBarcode(barcode);
+        if (optional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
 
-    //TODO: Criar uma collection no Postman ou similar para testar as requisições
-    
+        Product product = optional.get();
+
+        String url = String.format("http://localhost:8001/cambio-service/%s/BRL/USD",
+                product.getPrice());
+
+        Cambio cambio = restTemplate.getForObject(url, Cambio.class);
+
+        product.setPrice(cambio.getValue());
+
+        return ResponseEntity.ok().body(product);
+        
+    }
+
+    // TODO: Criar um end-point para recuperar um produto por codigo de barras
+    // TODO: Criar um end-point para excluir um produto pelo codigo de barras
+
+    // TODO: Criar uma collection no Postman ou similar para testar as requisições
+
 }
